@@ -46,7 +46,9 @@ public class InquiryServiceImpl implements InquiryService {
         // 获取品牌和经销商信息
         Brand brand = brandMapper.findById(vehicle.getBrandId());
         String dealerName = brand != null ? brand.getDealerName() : null;
+        String brandName = brand != null ? brand.getName() : null;
         
+        // 冗余车辆信息，避免后续车辆数据变更影响历史记录
         VehicleInquiry inquiry = VehicleInquiry.builder()
                 .userId(userId)
                 .vehicleId(request.getVehicleId())
@@ -54,6 +56,10 @@ public class InquiryServiceImpl implements InquiryService {
                 .phone(request.getPhone())
                 .needExchange(request.getNeedExchange() != null ? request.getNeedExchange() : 0)
                 .dealerName(dealerName)
+                .brandName(brandName)
+                .vehicleModel(vehicle.getModel())
+                .vehiclePrice(vehicle.getGuidePrice())
+                .vehicleImage(vehicle.getMainImage())
                 .status(InquiryStatus.PENDING.getCode())
                 .build();
         
@@ -111,6 +117,22 @@ public class InquiryServiceImpl implements InquiryService {
         
         inquiryMapper.updateStatus(id, status);
         log.info("询价状态更新成功: inquiryId={}", id);
+    }
+    
+    @Override
+    @Transactional
+    public void updateInquiry(Long id, String status, String remark, Long handlerId, String handlerName) {
+        log.info("更新询价信息: inquiryId={}, status={}, remark={}, handlerId={}", 
+                id, status, remark, handlerId);
+        
+        VehicleInquiry inquiry = inquiryMapper.findById(id);
+        if (inquiry == null) {
+            log.error("询价记录不存在: inquiryId={}", id);
+            throw new BusinessException("询价记录不存在");
+        }
+        
+        inquiryMapper.updateInquiry(id, status, remark, handlerId, handlerName);
+        log.info("询价信息更新成功: inquiryId={}", id);
     }
 }
 

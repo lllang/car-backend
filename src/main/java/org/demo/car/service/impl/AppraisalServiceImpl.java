@@ -94,13 +94,8 @@ public class AppraisalServiceImpl implements AppraisalService {
             throw new BusinessException("估价记录不存在");
         }
         
-        appraisal.setStatus(AppraisalStatus.FOLLOWING.getCode());
-        appraisal.setFollowerId(followerId);
-        appraisal.setFollowerName(followerName);
-        appraisal.setFollowTime(LocalDateTime.now());
-        appraisal.setRemark(remark);
-        
-        appraisalMapper.updateFollow(appraisal);
+        appraisalMapper.updateFollow(id, AppraisalStatus.FOLLOWING.getCode(), 
+                followerId, followerName, remark);
         log.info("估价跟进成功: appraisalId={}", id);
     }
 
@@ -115,9 +110,25 @@ public class AppraisalServiceImpl implements AppraisalService {
             throw new BusinessException("估价记录不存在");
         }
         
-        appraisal.setStatus(status);
-        appraisalMapper.updateFollow(appraisal);
+        // 保持原有的跟进信息，只更新状态
+        appraisalMapper.updateFollow(id, status, appraisal.getFollowerId(), 
+                appraisal.getFollowerName(), appraisal.getRemark());
         log.info("估价状态更新成功: appraisalId={}", id);
+    }
+    
+    @Override
+    @Transactional
+    public void updateRemark(Long id, String remark) {
+        log.info("更新估价备注: appraisalId={}, remark={}", id, remark);
+        
+        VehicleAppraisal appraisal = appraisalMapper.findById(id);
+        if (appraisal == null) {
+            log.error("估价记录不存在: appraisalId={}", id);
+            throw new BusinessException("估价记录不存在");
+        }
+        
+        appraisalMapper.updateRemark(id, remark);
+        log.info("估价备注更新成功: appraisalId={}", id);
     }
 }
 

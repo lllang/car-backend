@@ -17,13 +17,28 @@ public interface VehicleInquiryMapper {
     @Select("SELECT * FROM vehicle_inquiry WHERE user_id = #{userId} ORDER BY create_time DESC")
     List<VehicleInquiry> findByUserId(Long userId);
 
-    @Insert("INSERT INTO vehicle_inquiry(user_id, vehicle_id, brand_id, phone, need_exchange, dealer_name, status) " +
-            "VALUES(#{userId}, #{vehicleId}, #{brandId}, #{phone}, #{needExchange}, #{dealerName}, #{status})")
+    @Insert("INSERT INTO vehicle_inquiry(user_id, vehicle_id, brand_id, phone, need_exchange, dealer_name, " +
+            "brand_name, vehicle_model, vehicle_price, vehicle_image, status) " +
+            "VALUES(#{userId}, #{vehicleId}, #{brandId}, #{phone}, #{needExchange}, #{dealerName}, " +
+            "#{brandName}, #{vehicleModel}, #{vehiclePrice}, #{vehicleImage}, #{status})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(VehicleInquiry inquiry);
 
     @Update("UPDATE vehicle_inquiry SET status = #{status} WHERE id = #{id}")
     int updateStatus(@Param("id") Long id, @Param("status") String status);
+    
+    @Update("UPDATE vehicle_inquiry SET " +
+            "status = #{status}, " +
+            "remark = #{remark}, " +
+            "handler_id = #{handlerId}, " +
+            "handler_name = #{handlerName}, " +
+            "handle_time = NOW() " +
+            "WHERE id = #{id}")
+    int updateInquiry(@Param("id") Long id, 
+                     @Param("status") String status,
+                     @Param("remark") String remark,
+                     @Param("handlerId") Long handlerId,
+                     @Param("handlerName") String handlerName);
 
     @Delete("DELETE FROM vehicle_inquiry WHERE id = #{id}")
     int deleteById(Long id);

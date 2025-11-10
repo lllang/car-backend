@@ -23,9 +23,21 @@ public interface VehicleAppraisalMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(VehicleAppraisal appraisal);
 
-    @Update("UPDATE vehicle_appraisal SET status = #{status}, follower_id = #{followerId}, " +
-            "follower_name = #{followerName}, follow_time = #{followTime}, remark = #{remark} WHERE id = #{id}")
-    int updateFollow(VehicleAppraisal appraisal);
+    @Update("UPDATE vehicle_appraisal SET " +
+            "status = #{status}, " +
+            "follower_id = #{followerId}, " +
+            "follower_name = #{followerName}, " +
+            "follow_time = NOW(), " +
+            "remark = #{remark} " +
+            "WHERE id = #{id}")
+    int updateFollow(@Param("id") Long id,
+                    @Param("status") String status,
+                    @Param("followerId") Long followerId,
+                    @Param("followerName") String followerName,
+                    @Param("remark") String remark);
+    
+    @Update("UPDATE vehicle_appraisal SET remark = #{remark} WHERE id = #{id}")
+    int updateRemark(@Param("id") Long id, @Param("remark") String remark);
 
     @Delete("DELETE FROM vehicle_appraisal WHERE id = #{id}")
     int deleteById(Long id);

@@ -170,5 +170,41 @@ public class VehicleServiceImpl implements VehicleService {
         vehicleMapper.updateFeatured(id, isFeatured);
         log.info("更新车辆精选状态成功: vehicleId={}, isFeatured={}", id, isFeatured);
     }
+    
+    @Override
+    @Transactional
+    public void saveVehicleImages(Long vehicleId, List<String> imageUrls) {
+        Vehicle vehicle = vehicleMapper.findById(vehicleId);
+        if (vehicle == null) {
+            throw new BusinessException("车辆不存在");
+        }
+        
+        // 删除原有图片
+        vehicleImageMapper.deleteByVehicleId(vehicleId);
+        
+        // 保存新图片
+        for (int i = 0; i < imageUrls.size(); i++) {
+            VehicleImage vehicleImage = VehicleImage.builder()
+                    .vehicleId(vehicleId)
+                    .imageUrl(imageUrls.get(i))
+                    .sortOrder(i)
+                    .build();
+            vehicleImageMapper.insert(vehicleImage);
+        }
+        
+        log.info("保存车辆图片成功: vehicleId={}, count={}", vehicleId, imageUrls.size());
+    }
+    
+    @Override
+    @Transactional
+    public void deleteVehicleImage(Long imageId) {
+        VehicleImage image = vehicleImageMapper.findById(imageId);
+        if (image == null) {
+            throw new BusinessException("图片不存在");
+        }
+        
+        vehicleImageMapper.deleteById(imageId);
+        log.info("删除车辆图片成功: imageId={}", imageId);
+    }
 }
 

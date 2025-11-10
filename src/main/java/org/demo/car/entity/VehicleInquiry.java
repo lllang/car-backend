@@ -23,6 +23,15 @@ public class VehicleInquiry {
     private Integer needExchange;
     private String dealerName;
     private String status;
+    private String remark;
+    private Long handlerId;
+    private String handlerName;
+    private LocalDateTime handleTime;
+    // 车辆信息冗余字段
+    private String brandName;
+    private String vehicleModel;
+    private String vehiclePrice;
+    private String vehicleImage;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

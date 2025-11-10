@@ -61,5 +61,15 @@ public interface VehicleService {
      * 设置精选
      */
     void updateVehicleFeatured(Long id, Integer isFeatured);
+    
+    /**
+     * 保存车辆图片
+     */
+    void saveVehicleImages(Long vehicleId, List<String> imageUrls);
+    
+    /**
+     * 删除车辆图片
+     */
+    void deleteVehicleImage(Long imageId);
 }
 

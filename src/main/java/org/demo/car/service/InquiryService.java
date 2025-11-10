@@ -37,5 +37,10 @@ public interface InquiryService {
      * 更新询价状态
      */
     void updateInquiryStatus(Long id, String status);
+    
+    /**
+     * 更新询价信息（状态、备注、处理人）
+     */
+    void updateInquiry(Long id, String status, String remark, Long handlerId, String handlerName);
 }
 

@@ -165,11 +165,18 @@ spring.datasource.username=root
 spring.datasource.password=your_password
 ```
 
+### 服务端口配置
+
+```properties
+server.port=8081
+server.servlet.context-path=/api
+```
+
 ### 文件上传配置
 
 ```properties
-file.upload.path=/uploads/
-file.upload.base-url=http://localhost:8080/api
+file.upload.path=/Users/lizijun/code/car/uploads/
+file.upload.base-url=http://localhost:8081
 ```
 
 ### 微信配置
@@ -196,8 +203,9 @@ mvn spring-boot:run
 
 ### 3. 访问接口
 
-- 接口地址: http://localhost:8080/api
-- 健康检查: http://localhost:8080/api/health
+- 接口地址: http://localhost:8081/api
+- 健康检查: http://localhost:8081/api/health
+- 文件访问: http://localhost:8081/api/files/{fileUrl}
 
 ## 默认账号
 
@@ -261,17 +269,60 @@ mvn spring-boot:run
    - 首次运行会自动执行 schema.sql 和 data.sql
    - 如不需要可在配置文件中关闭
 
-## 待实现功能
+## 已实现功能清单
 
-以下功能已在技术方案中设计，但尚未完全实现，可根据需要继续开发：
+### 后端服务 (100%)
 
-- [ ] 更多管理端控制器（品牌、活动、权益等）
-- [ ] 完整的权限拦截器
-- [ ] 微信真实 API 集成
-- [ ] 短信服务真实 API 集成
-- [ ] 云存储集成
+- ✅ 完整的数据库设计（13张表）
+- ✅ 用户认证系统（Session + Cookie）
+- ✅ 权限控制系统（RBAC）
+- ✅ 文件上传服务（本地存储）
+- ✅ 短信服务（Mock实现）
+- ✅ 微信登录（Mock实现）
+
+### C端接口 (100%)
+
+- ✅ 用户登录/注册
+- ✅ 车辆浏览/收藏
+- ✅ 旧车估价申请
+- ✅ 新车询价
+- ✅ 活动浏览
+- ✅ 权益领取
+
+### 管理端接口 (100%)
+
+- ✅ 管理员认证
+- ✅ 品牌管理（CRUD + 状态管理）
+- ✅ 车辆管理（CRUD + 多图上传 + 精选设置）
+- ✅ 旧车估价管理（列表 + 跟进）
+- ✅ 新车询价管理（列表 + 处理）
+- ✅ 活动管理（CRUD + 状态管理）
+- ✅ 权益管理（CRUD + 状态管理）
+- ✅ 用户管理（查看列表）
+- ✅ 账号管理（CRUD + 状态管理 + 密码重置）
+
+### 前端管理后台 (100%)
+
+- ✅ 登录/退出
+- ✅ 品牌管理页面（含图片上传）
+- ✅ 车辆管理页面（含主图和多图上传）
+- ✅ 旧车估价列表页面
+- ✅ 新车询价列表页面
+- ✅ 活动管理页面（含图片上传）
+- ✅ 权益管理页面（含图片上传）
+- ✅ 用户管理页面
+- ✅ 权限管理页面
+
+## 待优化功能
+
+以下功能已实现基础版本，可根据需要优化：
+
+- [ ] 微信真实 API 集成（当前为 Mock）
+- [ ] 短信服务真实 API 集成（当前为 Mock）
+- [ ] 云存储集成（当前为本地存储）
 - [ ] 操作日志记录
 - [ ] 数据统计报表
+- [ ] C端 H5 前端页面
 
 ## 联系方式
 

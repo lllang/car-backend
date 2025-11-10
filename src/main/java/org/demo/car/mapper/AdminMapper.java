@@ -22,9 +22,12 @@ public interface AdminMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(Admin admin);
 
-    @Update("UPDATE admin SET real_name = #{realName}, phone = #{phone}, " +
-            "role_id = #{roleId}, status = #{status} WHERE id = #{id}")
+    @Update("UPDATE admin SET username = #{username}, password = #{password}, real_name = #{realName}, phone = #{phone}, " +
+            "role_id = #{roleId}, status = #{status}, update_time = NOW() WHERE id = #{id}")
     int update(Admin admin);
+    
+    @Update("UPDATE admin SET status = #{status}, update_time = NOW() WHERE id = #{id}")
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
 
     @Update("UPDATE admin SET password = #{password} WHERE id = #{id}")
     int updatePassword(@Param("id") Long id, @Param("password") String password);

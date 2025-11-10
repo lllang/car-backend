@@ -50,7 +50,7 @@ public class AdminAppraisalController {
     }
 
     /**
-     * 跟进估价
+     * 跟进估价（开始跟进）
      */
     @PutMapping("/{id}/follow")
     public Result<Void> followAppraisal(@PathVariable Long id, 
@@ -58,7 +58,8 @@ public class AdminAppraisalController {
         Long followerId = SecurityUtils.getCurrentUserId();
         String followerName = SecurityUtils.getCurrentUsername();
         
-        log.info("跟进估价: appraisalId={}, followerId={}", id, followerId);
+        log.info("跟进估价: appraisalId={}, followerId={}, followerName={}", 
+                id, followerId, followerName);
         appraisalService.followAppraisal(id, followerId, followerName, remark);
         return Result.success();
     }
@@ -71,6 +72,17 @@ public class AdminAppraisalController {
                                               @RequestParam String status) {
         log.info("更新估价状态: appraisalId={}, status={}", id, status);
         appraisalService.updateAppraisalStatus(id, status);
+        return Result.success();
+    }
+    
+    /**
+     * 更新备注
+     */
+    @PutMapping("/{id}/remark")
+    public Result<Void> updateRemark(@PathVariable Long id,
+                                    @RequestParam(required = false) String remark) {
+        log.info("更新估价备注: appraisalId={}, remark={}", id, remark);
+        appraisalService.updateRemark(id, remark);
         return Result.success();
     }
 }

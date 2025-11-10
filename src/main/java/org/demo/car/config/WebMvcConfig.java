@@ -22,7 +22,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // 配置文件访问路径映射
+        // 配置文件访问路径映射（因为有 context-path，所以不需要加 /api 前缀）
         registry.addResourceHandler("/files/**")
                 .addResourceLocations("file:" + uploadPath);
     }

@@ -42,5 +42,10 @@ public interface AppraisalService {
      * 更新估价状态
      */
     void updateAppraisalStatus(Long id, String status);
+    
+    /**
+     * 更新备注
+     */
+    void updateRemark(Long id, String remark);
 }
 

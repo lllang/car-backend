@@ -129,12 +129,47 @@ public class AdminVehicleController {
      */
     @PutMapping("/{id}/featured")
     @org.demo.car.security.RequirePermission("vehicle:update")
-    public Result<Void> updateVehicleFeatured(@PathVariable Long id, 
+    public Result<Void> updateVehicleFeatured(@PathVariable Long id,
                                               @RequestBody java.util.Map<String, Object> payload) {
         Boolean featured = (Boolean) payload.get("featured");
         Integer isFeatured = (featured != null && featured) ? 1 : 0;
         log.info("更新车辆精选状态: vehicleId={}, isFeatured={}", id, isFeatured);
         vehicleService.updateVehicleFeatured(id, isFeatured);
+        return Result.success();
+    }
+    
+    /**
+     * 获取车辆图片列表
+     */
+    @GetMapping("/{id}/images")
+    @org.demo.car.security.RequirePermission("vehicle:list")
+    public Result<java.util.List<org.demo.car.entity.VehicleImage>> getVehicleImages(@PathVariable Long id) {
+        log.info("获取车辆图片: vehicleId={}", id);
+        java.util.List<org.demo.car.entity.VehicleImage> images = vehicleService.getVehicleImages(id);
+        return Result.success(images);
+    }
+    
+    /**
+     * 保存车辆图片
+     */
+    @PostMapping("/{id}/images")
+    @org.demo.car.security.RequirePermission("vehicle:update")
+    public Result<Void> saveVehicleImages(@PathVariable Long id,
+                                          @RequestBody java.util.List<String> imageUrls) {
+        log.info("保存车辆图片: vehicleId={}, imageCount={}", id, imageUrls.size());
+        vehicleService.saveVehicleImages(id, imageUrls);
+        return Result.success();
+    }
+    
+    /**
+     * 删除车辆图片
+     */
+    @DeleteMapping("/{vehicleId}/images/{imageId}")
+    @org.demo.car.security.RequirePermission("vehicle:update")
+    public Result<Void> deleteVehicleImage(@PathVariable Long vehicleId,
+                                           @PathVariable Long imageId) {
+        log.info("删除车辆图片: vehicleId={}, imageId={}", vehicleId, imageId);
+        vehicleService.deleteVehicleImage(imageId);
         return Result.success();
     }
 }

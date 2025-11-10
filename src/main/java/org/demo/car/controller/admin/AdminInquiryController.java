@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.demo.car.common.result.PageResult;
 import org.demo.car.common.result.Result;
 import org.demo.car.entity.VehicleInquiry;
+import org.demo.car.security.SecurityUtils;
 import org.demo.car.service.InquiryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +56,22 @@ public class AdminInquiryController {
                                             @RequestParam String status) {
         log.info("更新询价状态: inquiryId={}, status={}", id, status);
         inquiryService.updateInquiryStatus(id, status);
+        return Result.success();
+    }
+    
+    /**
+     * 更新询价信息（状态、备注）
+     */
+    @PutMapping("/{id}")
+    public Result<Void> updateInquiry(@PathVariable Long id,
+                                     @RequestParam String status,
+                                     @RequestParam(required = false) String remark) {
+        Long handlerId = SecurityUtils.getCurrentUserId();
+        String handlerName = SecurityUtils.getCurrentUsername();
+        
+        log.info("更新询价: inquiryId={}, status={}, remark={}, handlerId={}", 
+                id, status, remark, handlerId);
+        inquiryService.updateInquiry(id, status, remark, handlerId, handlerName);
         return Result.success();
     }
 }
