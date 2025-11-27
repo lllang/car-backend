@@ -54,7 +54,11 @@ public class UserFavoriteController {
         log.debug("获取我的收藏: userId={}", userId);
         List<Vehicle> vehicles = favoriteService.getMyFavorites(userId);
         List<VehicleResponse> responses = vehicles.stream()
-                .map(VehicleResponse::from)
+                .map(vehicle -> {
+                    VehicleResponse response = VehicleResponse.from(vehicle);
+                    response.setIsFavorite(true);  // 收藏列表中的车辆都是已收藏的
+                    return response;
+                })
                 .collect(Collectors.toList());
         return Result.success(responses);
     }

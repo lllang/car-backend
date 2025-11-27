@@ -2,6 +2,7 @@ package org.demo.car.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.demo.car.service.SmsService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Service
+@Primary
 public class MockSmsServiceImpl implements SmsService {
 
     // 存储验证码，key为手机号，value为验证码

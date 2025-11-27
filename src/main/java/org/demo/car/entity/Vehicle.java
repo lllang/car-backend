@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class Vehicle {
     private Long id;
     private Long brandId;
+    private String brandName; // 品牌名称（关联查询结果）
     private String model;
     private String guidePrice;
     private String batteryCapacity;

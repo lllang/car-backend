@@ -3,6 +3,7 @@ package org.demo.car.service;
 import org.demo.car.entity.Vehicle;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 收藏服务接口
@@ -28,5 +29,10 @@ public interface FavoriteService {
      * 判断是否已收藏
      */
     boolean isFavorite(Long userId, Long vehicleId);
+    
+    /**
+     * 批量获取用户收藏的车辆ID集合
+     */
+    Set<Long> getUserFavoriteVehicleIds(Long userId);
 }
 

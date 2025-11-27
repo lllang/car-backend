@@ -7,10 +7,13 @@ import org.demo.car.common.result.Result;
 import org.demo.car.dto.response.VehicleResponse;
 import org.demo.car.entity.Vehicle;
 import org.demo.car.entity.VehicleImage;
+import org.demo.car.security.SecurityUtils;
+import org.demo.car.service.FavoriteService;
 import org.demo.car.service.VehicleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 public class UserVehicleController {
 
     private final VehicleService vehicleService;
+    private final FavoriteService favoriteService;
 
     /**
      * 获取精选现车
@@ -30,8 +34,17 @@ public class UserVehicleController {
     @GetMapping("/featured")
     public Result<List<VehicleResponse>> getFeaturedVehicles(@RequestParam(defaultValue = "10") Integer limit) {
         List<Vehicle> vehicles = vehicleService.getFeaturedVehicles(limit);
+        
+        // 获取当前用户的收藏列表
+        Long userId = SecurityUtils.getCurrentUserId();
+        Set<Long> favoriteVehicleIds = favoriteService.getUserFavoriteVehicleIds(userId);
+        
         List<VehicleResponse> responses = vehicles.stream()
-            .map(VehicleResponse::from)
+            .map(vehicle -> {
+                VehicleResponse response = VehicleResponse.from(vehicle);
+                response.setIsFavorite(favoriteVehicleIds.contains(vehicle.getId()));
+                return response;
+            })
             .collect(Collectors.toList());
         return Result.success(responses);
     }
@@ -49,8 +62,16 @@ public class UserVehicleController {
         PageResult<Vehicle> pageResult = vehicleService.getVehiclePage(
             brandId, model, 1, pageNum, pageSize);  // 只查询上架的车辆
         
+        // 获取当前用户的收藏列表
+        Long userId = SecurityUtils.getCurrentUserId();
+        Set<Long> favoriteVehicleIds = favoriteService.getUserFavoriteVehicleIds(userId);
+        
         List<VehicleResponse> responses = pageResult.getList().stream()
-            .map(VehicleResponse::from)
+            .map(vehicle -> {
+                VehicleResponse response = VehicleResponse.from(vehicle);
+                response.setIsFavorite(favoriteVehicleIds.contains(vehicle.getId()));
+                return response;
+            })
             .collect(Collectors.toList());
         
         PageResult<VehicleResponse> result = new PageResult<>(
@@ -77,6 +98,10 @@ public class UserVehicleController {
             .map(VehicleImage::getImageUrl)
             .collect(Collectors.toList()));
         
+        // 设置是否收藏
+        Long userId = SecurityUtils.getCurrentUserId();
+        response.setIsFavorite(favoriteService.isFavorite(userId, id));
+        
         return Result.success(response);
     }
 
@@ -101,8 +126,17 @@ public class UserVehicleController {
             @RequestParam(defaultValue = "5") Integer limit) {
         
         List<Vehicle> vehicles = vehicleService.getSimilarVehicles(id, limit);
+        
+        // 获取当前用户的收藏列表
+        Long userId = SecurityUtils.getCurrentUserId();
+        Set<Long> favoriteVehicleIds = favoriteService.getUserFavoriteVehicleIds(userId);
+        
         List<VehicleResponse> responses = vehicles.stream()
-            .map(VehicleResponse::from)
+            .map(vehicle -> {
+                VehicleResponse response = VehicleResponse.from(vehicle);
+                response.setIsFavorite(favoriteVehicleIds.contains(vehicle.getId()));
+                return response;
+            })
             .collect(Collectors.toList());
         
         return Result.success(responses);

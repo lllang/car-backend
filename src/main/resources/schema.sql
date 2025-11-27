@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `vehicle_inquiry` (
 CREATE TABLE IF NOT EXISTS `activity` (
   `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL COMMENT '活动名称',
-  `type` VARCHAR(50) NOT NULL COMMENT '活动类型 LIMITED_OFFER限时优惠 EVENT活动中心',
+  `type` VARCHAR(50) NOT NULL COMMENT '活动类型 LIMITED_TIME限时优惠 EVENT活动中心',
   `image` VARCHAR(255) COMMENT '活动图片',
   `link_url` VARCHAR(500) COMMENT '跳转链接',
   `vehicle_id` BIGINT COMMENT '关联车辆ID（限时优惠用）',

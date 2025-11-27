@@ -7,7 +7,7 @@ import lombok.Getter;
  */
 @Getter
 public enum ActivityType {
-    LIMITED_OFFER("LIMITED_OFFER", "限时优惠"),
+    LIMITED_TIME("LIMITED_TIME", "限时优惠"),
     EVENT("EVENT", "活动中心");
 
     private final String code;

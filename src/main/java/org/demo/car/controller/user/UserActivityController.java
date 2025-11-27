@@ -26,7 +26,7 @@ public class UserActivityController {
     @GetMapping("/limited-offers")
     public Result<List<Activity>> getLimitedOffers() {
         log.debug("获取限时优惠列表");
-        List<Activity> list = activityService.getActivitiesByType("LIMITED_OFFER");
+        List<Activity> list = activityService.getActivitiesByType("LIMITED_TIME");
         return Result.success(list);
     }
 

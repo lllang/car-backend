@@ -32,6 +32,7 @@ public class VehicleResponse {
         VehicleResponse response = new VehicleResponse();
         response.setId(vehicle.getId());
         response.setBrandId(vehicle.getBrandId());
+        response.setBrandName(vehicle.getBrandName());
         response.setModel(vehicle.getModel());
         response.setGuidePrice(vehicle.getGuidePrice());
         response.setBatteryCapacity(vehicle.getBatteryCapacity());

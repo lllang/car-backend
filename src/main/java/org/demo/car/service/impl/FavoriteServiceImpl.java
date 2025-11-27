@@ -11,7 +11,9 @@ import org.demo.car.service.FavoriteService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 收藏服务实现
@@ -77,6 +79,12 @@ public class FavoriteServiceImpl implements FavoriteService {
     public boolean isFavorite(Long userId, Long vehicleId) {
         UserFavorite favorite = favoriteMapper.findByUserIdAndVehicleId(userId, vehicleId);
         return favorite != null;
+    }
+    
+    @Override
+    public Set<Long> getUserFavoriteVehicleIds(Long userId) {
+        List<Long> vehicleIds = favoriteMapper.findVehicleIdsByUserId(userId);
+        return new HashSet<>(vehicleIds);
     }
 }
 

@@ -11,15 +11,26 @@ import java.util.List;
 @Mapper
 public interface VehicleMapper {
 
-    @Select("SELECT * FROM vehicle WHERE id = #{id}")
+    @Select("SELECT v.*, b.name as brand_name FROM vehicle v " +
+            "LEFT JOIN brand b ON v.brand_id = b.id " +
+            "WHERE v.id = #{id}")
+    @Results(id = "vehicleResultMap", value = {
+            @Result(property = "brandName", column = "brand_name")
+    })
     Vehicle findById(Long id);
 
-    @Select("SELECT * FROM vehicle WHERE status = 1 AND is_featured = 1 " +
-            "ORDER BY sort_order DESC, create_time DESC LIMIT #{limit}")
+    @Select("SELECT v.*, b.name as brand_name FROM vehicle v " +
+            "LEFT JOIN brand b ON v.brand_id = b.id " +
+            "WHERE v.status = 1 AND v.is_featured = 1 " +
+            "ORDER BY v.sort_order DESC, v.create_time DESC LIMIT #{limit}")
+    @ResultMap("vehicleResultMap")
     List<Vehicle> findFeatured(Integer limit);
 
-    @Select("SELECT * FROM vehicle WHERE brand_id = #{brandId} AND status = 1 AND id != #{excludeId} " +
-            "ORDER BY sort_order DESC LIMIT #{limit}")
+    @Select("SELECT v.*, b.name as brand_name FROM vehicle v " +
+            "LEFT JOIN brand b ON v.brand_id = b.id " +
+            "WHERE v.brand_id = #{brandId} AND v.status = 1 AND v.id != #{excludeId} " +
+            "ORDER BY v.sort_order DESC LIMIT #{limit}")
+    @ResultMap("vehicleResultMap")
     List<Vehicle> findSimilarByBrand(@Param("brandId") Long brandId, 
                                      @Param("excludeId") Long excludeId,
                                      @Param("limit") Integer limit);
@@ -47,16 +58,18 @@ public interface VehicleMapper {
     int deleteById(Long id);
 
     @Select("<script>" +
-            "SELECT * FROM vehicle " +
+            "SELECT v.*, b.name as brand_name FROM vehicle v " +
+            "LEFT JOIN brand b ON v.brand_id = b.id " +
             "<where>" +
-            "<if test='brandId != null'> AND brand_id = #{brandId} </if>" +
-            "<if test='model != null and model != \"\"'> AND model LIKE CONCAT('%', #{model}, '%') </if>" +
-            "<if test='status != null'> AND status = #{status} </if>" +
-            "<if test='isFeatured != null'> AND is_featured = #{isFeatured} </if>" +
+            "<if test='brandId != null'> AND v.brand_id = #{brandId} </if>" +
+            "<if test='model != null and model != \"\"'> AND v.model LIKE CONCAT('%', #{model}, '%') </if>" +
+            "<if test='status != null'> AND v.status = #{status} </if>" +
+            "<if test='isFeatured != null'> AND v.is_featured = #{isFeatured} </if>" +
             "</where>" +
-            "ORDER BY sort_order DESC, create_time DESC " +
+            "ORDER BY v.sort_order DESC, v.create_time DESC " +
             "LIMIT #{offset}, #{limit}" +
             "</script>")
+    @ResultMap("vehicleResultMap")
     List<Vehicle> findByPage(@Param("brandId") Long brandId,
                              @Param("model") String model,
                              @Param("status") Integer status,

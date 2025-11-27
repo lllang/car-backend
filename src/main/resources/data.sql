@@ -15,6 +15,8 @@ ON DUPLICATE KEY UPDATE username=VALUES(username);
 
 -- 插入权限数据（页面级别权限）
 INSERT INTO `permission` (`id`, `name`, `code`, `type`, `parent_id`, `path`) VALUES
+-- 超级管理员权限
+(0, '超级管理员', '*', 'BUTTON', 0, NULL),
 -- 一级菜单
 (1, '权限管理', 'permission:manage', 'MENU', 0, '/admin/permission'),
 (2, '品牌管理', 'brand:manage', 'MENU', 0, '/admin/brand'),

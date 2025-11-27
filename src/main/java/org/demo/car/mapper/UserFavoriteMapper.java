@@ -18,10 +18,14 @@ public interface UserFavoriteMapper {
     @Select("SELECT * FROM user_favorite WHERE user_id = #{userId} AND vehicle_id = #{vehicleId}")
     UserFavorite findByUserIdAndVehicleId(@Param("userId") Long userId, @Param("vehicleId") Long vehicleId);
 
-    @Select("SELECT v.* FROM vehicle v " +
+    @Select("SELECT v.*, b.name as brand_name FROM vehicle v " +
             "INNER JOIN user_favorite uf ON v.id = uf.vehicle_id " +
+            "LEFT JOIN brand b ON v.brand_id = b.id " +
             "WHERE uf.user_id = #{userId} " +
             "ORDER BY uf.create_time DESC")
+    @Results({
+            @Result(property = "brandName", column = "brand_name")
+    })
     List<Vehicle> findFavoriteVehiclesByUserId(Long userId);
 
     @Insert("INSERT INTO user_favorite(user_id, vehicle_id) VALUES(#{userId}, #{vehicleId})")
@@ -33,5 +37,8 @@ public interface UserFavoriteMapper {
 
     @Delete("DELETE FROM user_favorite WHERE id = #{id}")
     int deleteById(Long id);
+    
+    @Select("SELECT vehicle_id FROM user_favorite WHERE user_id = #{userId}")
+    List<Long> findVehicleIdsByUserId(Long userId);
 }
 

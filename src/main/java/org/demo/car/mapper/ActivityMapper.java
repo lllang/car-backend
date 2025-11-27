@@ -15,6 +15,8 @@ public interface ActivityMapper {
     Activity findById(Long id);
 
     @Select("SELECT * FROM activity WHERE type = #{type} AND status = 1 " +
+            "AND (start_time IS NULL OR start_time <= NOW()) " +
+            "AND (end_time IS NULL OR end_time > NOW()) " +
             "ORDER BY sort_order DESC, create_time DESC")
     List<Activity> findByType(String type);
 
